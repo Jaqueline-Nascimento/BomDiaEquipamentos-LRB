@@ -1,0 +1,82 @@
+/* Estilos gerais para o layout da aplicação */
+.container {
+    padding-top: 20px; /* Adiciona espaço no topo para separar o conteúdo do topo da página */
+    width: 90%; /* Define a largura do container para 90% da largura da viewport */
+    margin: auto; /* Centraliza o container horizontalmente */
+  }
+  
+  /* Estilização dos títulos principais */
+  .main-title, .title {
+    text-align: center; /* Centraliza o texto dos títulos */
+    color: white; /* Define a cor do texto para branco */
+    background-color: darkblue; /* Define a cor de fundo para azul escuro */
+    padding: 10px; /* Adiciona padding interno de 10px para todos os lados */
+    margin-top: 20px; /* Adiciona margem acima do título para separá-lo dos elementos acima */
+  }
+  
+  /* Estilização dos grupos de formulário */
+  .form-group {
+    margin-bottom: 20px; /* Adiciona uma margem abaixo do grupo de formulário para separá-lo dos elementos abaixo */
+  }
+  
+  /* Estilização das seções de equipamento */
+  .equipment-layout {
+    display: flex; /* Usa flexbox para alinhar as seções de equipamentos lado a lado */
+    flex-wrap: wrap; /* Permite que as seções quebrem a linha conforme necessário */
+    justify-content: space-around; /* Distribui espaço uniformemente entre as seções */
+    margin-top: 20px; /* Adiciona margem no topo para separar as seções de equipamento dos elementos acima */
+  }
+  
+  .turno-section {
+    flex: 1 1 30%; /* Cada seção de turno pode crescer e encolher, mas tenta manter 30% da largura */
+    padding: 10px; /* Adiciona padding interno */
+    border: 1px solid #ccc; /* Define uma borda sólida */
+    margin: 5px; /* Adiciona uma pequena margem em torno de cada seção de turno */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adiciona sombra para um efeito 3D sutil */
+  }
+  
+  /* Estilização de botões e inputs */
+  button, input[type="date"], select {
+    padding: 8px; /* Adiciona padding interno para um toque mais confortável */
+    margin-top: 5px; /* Adiciona uma pequena margem acima para separar do conteúdo acima */
+    border-radius: 4px; /* Arredonda as bordas para uma estética mais suave */
+    border: 1px solid #ccc; /* Adiciona uma borda sólida */
+    box-shadow: 0 1px 3px #ddd; /* Adiciona sombra para um efeito elevado */
+  }
+  
+  button {
+    background-color: #007BFF; /* Define a cor de fundo do botão para azul */
+    color: white; /* Define a cor do texto para branco */
+    cursor: pointer; /* Muda o cursor para indicar que o botão é clicável */
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Escurece a cor de fundo do botão quando passado o mouse por cima */
+  }
+  
+  input[type="date"], select {
+    width: calc(100% - 16px); /* Define a largura para ser a total menos 16px para ajustar o padding */
+  }
+  
+  label {
+    display: block; /* Faz cada etiqueta ser um bloco, colocando o texto e o campo de entrada em linhas separadas */
+    margin-bottom: 10px; /* Adiciona uma margem abaixo de cada etiqueta */
+  }
+  
+  /* Estilização para responsividade */
+  @media (max-width: 800px) {
+    .equipment-layout {
+      flex-direction: column; /* Muda a direção do flex para coluna em telas menores */
+    }
+  
+    .turno-section {
+      flex: 1 1 100%; /* Faz cada seção de turno ocupar 100% da largura em telas menores */
+      margin: 5px 0; /* Ajusta as margens para melhor espaçamento vertical */
+    }
+  }
+  
+  
+  
+  
+
+  
