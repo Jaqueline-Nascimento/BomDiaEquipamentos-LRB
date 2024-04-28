@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BOM DIA EQUIPAMENTOS - LRB</title>
+    <style>
+        /* Estilo para o título principal */
+        h1 {
+            background-color: #063580; /* Azul escuro */
+            color: #fff; /* Branco */
+            padding: 20px; /* Espaçamento interno */
+            text-align: center; /* Alinhamento centralizado */
+        }
+
+        /* Estilo para o título "Roçadeiras" */
+        .equipment-title {
+            background-color: #063580; /* Azul escuro */
+            color: #fff; /* Branco */
+            padding: 10px; /* Espaçamento interno */
+            text-align: center; /* Alinhamento centralizado */
+            text-transform: uppercase; /* Converter texto para maiúsculas */
+        }
+
+        /* Estilo para o contêiner dos quadrinhos dos turnos */
+        .quadros-turno-container {
+            text-align: center; /* Centralizar horizontalmente o conteúdo */
+        }
+
+        /* Estilo para os quadrinhos dos turnos */
+        .turno-box {
+            border: 1px solid #063580; /* Borda azul escuro */
+            background-color: #f2f2f2; /* Fundo cinza claro */
+            padding: 10px; /* Espaçamento interno */
+            margin-bottom: 20px; /* Margem inferior para criar espaço entre as caixas de turno */
+        }
+
+        /* Estilo para os títulos dos quadrinhos dos turnos */
+        .turno-title {
+            margin-top: 0; /* Remover margem superior padrão */
+        }
+
+        /* Estilo para os campos dos turnos */
+        .turno-field {
+            display: block; /* Mostrar em bloco para que fiquem um embaixo do outro */
+            margin-top: 5px; /* Margem superior entre os campos */
+        }
+
+        /* Estilo para os campos "Oficina" e "Quebradas na Gerência" */
+        label {
+            margin-bottom: 30px; /* Adicionar margem inferior para criar espaço de uma linha */
+        }
+
+        /* Estilo para o contêiner dos turnos */
+        .turno-container {
+            margin-bottom: 20px; /* Adicionar margem inferior entre a linha "Oficina" e os turnos */
+        }
+
+        /* Estilo para adicionar espaço de uma linha */
+        .line-break {
+            margin-bottom: 20px; /* Adicionar margem inferior de uma linha */
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse; /* Mesclar as bordas das células */
+            width: 50%; /* Largura da tabela ocupando toda a largura disponível */
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* Borda sólida de 1px com cinza claro */
+            padding: 8px; /* Preenchimento interno de 8px */
+            text-align: left; /* Alinhamento do texto à esquerda */
+        }
+
+        th {
+            background-color: #063580; /* Cor de fundo cinza claro para as células de cabeçalho */
+            color: #fff; /* Branco  */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Cor de fundo cinza claro para as linhas pares */
+        }
+
+        /* Estilo para o contêiner das cotas */
+        .cotas-container {
+            page-break-before: always; /* Insere uma quebra de página antes do contêiner das cotas */
+        }
+
+        /* Estilo para as células das colunas "Oficina", "Quebrado na Gerência" e "Disponível na Gerência" */
+        .oficina,
+        .quebradas,
+        .Disponivel {
+            text-align: center; /* Centraliza o texto */
+        }
+
+        /* Estilo para o título "DISTRIBUIÇÃO DE EQUIPAMENTOS" */
+        .equipment-title {
+            font-family: calibri; /* Altera o tipo de fonte para Arial ou uma fonte sans-serif genérica */
+            /* Outras propriedades de estilo, se desejar */
+        }
+
+        /* Estilo para o botão "Finalizar" */
+        button[type="submit"] {
+            background-color: #063580; /* Cor de fundo azul escuro */
+            color: #fff; /* Cor do texto branco */
+            padding: 10px 20px; /* Preenchimento interno */
+            border: none; /* Remover borda */
+            border-radius: 5px; /* Bordas arredondadas */
+            cursor: pointer; /* Alterar o cursor para indicar interatividade */
+        }
+
+        /* Estilo para o botão "Finalizar" quando passar o mouse por cima */
+        button[type="submit"]:hover {
+            background-color: #001F4D; /* Cor de fundo azul mais escura */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Título principal -->
+    <h1>BOM DIA EQUIPAMENTOS - LRB</h1>
+
+    <!-- Formulário para atualização -->
+    <form method="POST" action="/update">
+
+        <!-- Campo para selecionar a Gerência -->
+        <select id="gerencia" name="gerencia" onchange="submitFormAndHandleVisibility()">
+            <option value="">Selecione uma Gerência</option>
+            <option value="BG16F">BG16F</option>
+            <option value="BG16J">BG16J</option>
+            <option value="BG24B">BG24B</option>
+            <option value="BG24R">BG24R</option>
+            <option value="BGE">BGE</option>
+        </select>
+
+        <!-- Campo para selecionar a Data -->
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data">
+
+        
+
+        <!-- Contêiner para a tabela de cotas dos equipamentos -->
+        <div class="cotas-container" id="tabelaCotas" style="display: block;">
+            <!-- Quebra de página antes da tabela -->
+            <br style="page-break-before: always;">
+                
+            <!-- Tabela para exibir cotas dos equipamentos -->
+            {% if quotas %}<!-- verifica se existem cotas para a gerência selecionada. Se existirem, o bloco de código dentro deste condicional será executado. -->
+            <p>Quotas existentes: {{ quotas }}</p>
+            <table id="cotas-table">
+                <tr>
+                    <th>Equipamento</th>
+                    <th>Cota</th>
+                    <th>Oficina</th>
+                    <th>Quebrado na Gerência</th>
+                    <th>Disponível na Gerência</th>
+                </tr>
+                {% for gerencia, equipamentos in quotas.items() %}
+                    {% for equipamento, cota in equipamentos.items() %}
+                        <tr>
+                            <td>{{ equipamento.capitalize() }}</td>
+                            <td>{{ cota }}</td>
+                            <td><input type="number" name="oficina_{{ gerencia }}_{{ equipamento }}" value="0" /></td>
+                            <td><input type="number" name="quebradas_{{ gerencia }}_{{ equipamento }}" value="0" /></td>
+                            <td><input type="number" name="disponivel_{{ gerencia }}_{{ equipamento }}" value="0" /></td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </table>
+            {% endif %}<!--  encerra o bloco condicional, indicando o final da estrutura condicional. Se não houver cotas para a gerência selecionada, a tabela não será renderizada -->
+        </div>
+
+        <!-- Contêiner para os campos dos equipamentos -->
+        <div class="turno-container">
+            <!-- Título para os equipamentos do tipo "Roçadeiras" -->
+            <h3 class="equipment-title">DISTRIBUIÇÃO DE EQUIPAMENTOS</h3>
+
+            <!-- Quebra de linha -->
+            <div class="line-break"></div>
+                
+            <!-- Loop para os turnos -->
+            <div>
+                {% for turno in equipamentos['Roçadeiras']['turnos'] %}
+                <div class="turno-box">
+                    <!-- Título do turno -->
+                    <h4 class="turno-title">{{ turno['turno'] }}</h4>
+
+                    <!-- Campo para a quantidade operando -->
+                    <span class="turno-field center-text">
+                        <label for="{{ turno['turno'] }}_operando">Quantidades Operando:</label>
+                    </span>
+
+                    <!-- Campo para o logradouro e quantidade de máquinas -->
+                    <span class="turno-field">
+                        <label for="{{ turno['turno'] }}_logradouro">Logradouro:</label>
+                        <input type="text" id="{{ turno['turno'] }}_logradouro" name="{{ turno['turno'] }}_logradouro" placeholder="Nome do Logradouro">
+                        <input type="number" id="{{ turno['turno'] }}_qtd_maquina" name="{{ turno['turno'] }}_qtd_maquina" placeholder="Qtd de Roçadeiras">
+                        <input type="number" id="{{ turno['turno'] }}_qtd_soprador" name="{{ turno['turno'] }}_qtd_soprador" placeholder="Qtd de Sopradores">
+                        <input type="number" id="{{ turno['turno'] }}_qtd_motopoda" name="{{ turno['turno'] }}_qtd_motopoda" placeholder="Qtd de Motopodas">
+                        <input type="number" id="{{ turno['turno'] }}_qtd_motoserra" name="{{ turno['turno'] }}_qtd_motoserra" placeholder="Qtd de Motosserras">
+
+                        <!-- Botão de remoção -->
+                        <button type="button" class="remove-logradouro-btn">-</button>
+                    </span> 
+
+                    <!-- Botão de adição -->
+                    <span class="turno-field">
+                        <button type="button" class="add-logradouro-btn">+</button>
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Caixa de diálogo para observações -->
+        <label for="observacoes">Observações:</label>
+        <textarea id="observacoes" name="observacoes" rows="4" cols="150"></textarea>
+
+        <!-- Adicionar espaço de uma linha -->
+        <br><br>
+
+        <!-- Botão para enviar o formulário -->
+        <button type="submit" name="submit_button" value="submit_value">Finalizar</button>
+    </form>
+    
+    <script>
+        // Adicionando campos de logradouro, quantidade de roçadeiras e quantidade de sopradores ao clicar no botão "+"
+        document.querySelectorAll('.add-logradouro-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Encontrando o contêiner pai
+                var parentContainer = this.closest('.turno-box');
+
+                // Criando os elementos HTML para o novo campo
+                var newFieldContainer = document.createElement('span');
+                newFieldContainer.classList.add('turno-field');
+
+                var labelLogradouro = document.createElement('label');
+                labelLogradouro.textContent = 'Logradouro:';
+                var inputLogradouro = document.createElement('input');
+                inputLogradouro.setAttribute('type', 'text');
+                inputLogradouro.setAttribute('id', 'new_logradouro');
+                inputLogradouro.setAttribute('name', 'new_logradouro');
+                inputLogradouro.setAttribute('placeholder', 'Nome do Logradouro');
+
+                var inputQtdRocadeiras = document.createElement('input');
+                inputQtdRocadeiras.setAttribute('type', 'number');
+                inputQtdRocadeiras.setAttribute('id', 'new_qtd_rocadeiras');
+                inputQtdRocadeiras.setAttribute('name', 'new_qtd_rocadeiras');
+                inputQtdRocadeiras.setAttribute('placeholder', 'Qtd de Roçadeiras');
+
+                var inputQtdSopradores = document.createElement('input');
+                inputQtdSopradores.setAttribute('type', 'number');
+                inputQtdSopradores.setAttribute('id', 'new_qtd_sopradores');
+                inputQtdSopradores.setAttribute('name', 'new_qtd_sopradores');
+                inputQtdSopradores.setAttribute('placeholder', 'Qtd de Sopradores');
+
+                var inputQtdMotopodas = document.createElement('input');
+                inputQtdMotopodas.setAttribute('type', 'number');
+                inputQtdMotopodas.setAttribute('id', 'new_qtd_motopodas');
+                inputQtdMotopodas.setAttribute('name', 'new_qtd_motopodas');
+                inputQtdMotopodas.setAttribute('placeholder', 'Qtd de Motopodas');
+
+                var inputQtdMotosserras = document.createElement('input');
+                inputQtdMotosserras.setAttribute('type', 'number');
+                inputQtdMotosserras.setAttribute('id', 'new_qtd_motosserras');
+                inputQtdMotosserras.setAttribute('name', 'new_qtd_motosserras');
+                inputQtdMotosserras.setAttribute('placeholder', 'Qtd de Motosserras');
+
+                // Adicionando os elementos criados ao novo campo
+                newFieldContainer.appendChild(labelLogradouro);
+                newFieldContainer.appendChild(inputLogradouro);
+                newFieldContainer.appendChild(inputQtdRocadeiras);
+                newFieldContainer.appendChild(inputQtdSopradores);
+                newFieldContainer.appendChild(inputQtdMotopodas);
+                newFieldContainer.appendChild(inputQtdMotosserras);
+
+                // Adicionando o novo campo após o último campo de logradouro
+                parentContainer.appendChild(newFieldContainer);
+
+                // Movendo o botão "+" para o final
+                parentContainer.appendChild(this);
+
+                // Criando botão "-" para o novo campo
+                var removeButton = document.createElement('button');
+                removeButton.setAttribute('type', 'button');
+                removeButton.classList.add('remove-logradouro-btn');
+                removeButton.textContent = '-';
+
+                // Adicionando evento de clique para o botão "-"
+                removeButton.addEventListener('click', function() {
+                    var logradouroContainer = this.closest('.turno-field');
+                    logradouroContainer.remove();
+                    // Remover botão de remoção ao remover o logradouro
+                    this.remove();
+                });
+
+                // Adicionando o botão "-" ao novo campo
+                newFieldContainer.appendChild(removeButton);
+            });
+        });
+
+        
+
+        // Adiciona um listener para cada campo de quantidade de máquinas
+        document.querySelectorAll('input[type="number"]').forEach(function(input) {
+            input.addEventListener('change', function() {
+                updateDistribution(this);
+            });
+        });
+
+        // Função para atualizar a distribuição
+        function updateDistribution() {
+            // Seleciona todas as linhas da tabela de cotas
+            var rows = document.querySelectorAll('#cotas-table tr');
+
+            // Itera sobre as linhas, exceto a primeira (cabeçalho)
+            for (var i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                // Encontra o identificador do equipamento
+                var equipamento = row.getAttribute('id');
+                // Encontra a quantidade de máquinas
+                var qtd_maquina = parseInt(document.querySelector('#' + equipamento + '_qtd_maquina').value) || 0;
+                var qtd_soprador = parseInt(document.querySelector('#' + equipamento + '_qtd_soprador').value) || 0;
+                var qtd_motopoda = parseInt(document.querySelector('#' + equipamento + '_qtd_motopoda').value) || 0;
+                var qtd_motoserra = parseInt(document.querySelector('#' + equipamento + '_qtd_motoserra').value) || 0;
+
+                // Calcula a distribuição
+                var distribuicao = qtd_maquina + qtd_soprador + qtd_motopoda + qtd_motoserra;
+
+                // Atualiza a célula de distribuição na linha atual da tabela
+                row.querySelector('.oficina').textContent = distribuicao;
+            }
+        }
+
+        // Adicionando evento de clique para o botão "-"
+        document.querySelectorAll('.remove-logradouro-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Encontrando o contêiner pai do campo de logradouro a ser removido
+                var logradouroContainer = this.closest('.turno-field');
+                // Removendo o contêiner do logradouro
+                logradouroContainer.remove();
+
+                // Encontrando o contêiner pai do botão "-" e removendo-o
+                var parentContainer = this.closest('.turno-box');
+                parentContainer.removeChild(this);
+            });
+        });
+
+        function submitFormAndHandleVisibility() {
+            var select = document.getElementById('gerencia');
+            var tabelaCotas = document.getElementById('tabelaCotas');
+            var gerenciaSelecionada = select.value;
+            console.log("Gerência selecionada:", gerenciaSelecionada);  // Adicione um log aqui
+
+        
+            if (gerenciaSelecionada === "") {
+                tabelaCotas.style.display = 'none';
+            } else {
+                tabelaCotas.style.display = '';
+
+                
+            }
+        }
+
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.querySelector('form');
+            var select = document.getElementById('gerencia');
+    
+            // Chama a função quando a página é carregada
+            submitFormAndHandleVisibility();
+    
+            // Adiciona evento de mudança para o select de gerências
+            select.addEventListener('change', submitFormAndHandleVisibility);
+    
+            // Adiciona evento de envio para o formulário para manter a tabela visível se necessário
+            form.addEventListener('submit', function(event) {
+                submitFormAndHandleVisibility();
+                // Pode querer prevenir o envio padrão se estiver usando AJAX ou algum método de atualização dinâmica
+                // event.preventDefault();
+            });
+        });
+    
+    </script>
+</body>
+</html>
